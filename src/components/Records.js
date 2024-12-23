@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function Records({ records, onRecordsChange }) {
+function Records({ records, onRecordsChange, formatTimeForDisplay, currencySymbol }) {
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
   const [filters, setFilters] = useState({
@@ -193,7 +193,7 @@ function Records({ records, onRecordsChange }) {
               <Text style={styles.tableCell}>Horaires</Text>
               <Text style={styles.tableCell}>Pauses</Text>
               <Text style={styles.tableCell}>Total</Text>
-              <Text style={styles.tableCell}>Montant</Text>
+              <Text style={styles.tableCell}>Montant ({currencySymbol})</Text>
             </View>
 
             {filteredRecords.map((record, index) => (
@@ -208,14 +208,14 @@ function Records({ records, onRecordsChange }) {
                 </Text>
                 <Text style={styles.tableCell}>{record.breaks}h</Text>
                 <Text style={styles.tableCell}>{parseFloat(record.totalTime).toFixed(2)}h</Text>
-                <Text style={styles.tableCell}>{parseFloat(record.amount).toFixed(2)}€</Text>
+                <Text style={styles.tableCell}>{parseFloat(record.amount).toFixed(2)}{currencySymbol}</Text>
               </View>
             ))}
           </View>
 
           <View style={styles.totals}>
             <Text>Total Heures : {totals.hours.toFixed(2)}h</Text>
-            <Text>Total Montant : {totals.amount.toFixed(2)}€</Text>
+            <Text>Total Montant : {totals.amount.toFixed(2)}{currencySymbol}</Text>
           </View>
         </Page>
       </Document>
@@ -298,7 +298,7 @@ function Records({ records, onRecordsChange }) {
             Heures totales : {totals.hours.toFixed(2)} h
           </Typography>
           <Typography variant="h6">
-            Montant total : {totals.amount.toFixed(2)} €
+            Montant total : {totals.amount.toFixed(2)} {currencySymbol}
           </Typography>
         </Box>
       </Box>
@@ -379,7 +379,7 @@ function Records({ records, onRecordsChange }) {
               <TableCell>Fin</TableCell>
               <TableCell>Pauses (h)</TableCell>
               <TableCell>Total (h)</TableCell>
-              <TableCell>Montant (€)</TableCell>
+              <TableCell>Montant ({currencySymbol})</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -401,7 +401,7 @@ function Records({ records, onRecordsChange }) {
                 </TableCell>
                 <TableCell>{record.breaks}</TableCell>
                 <TableCell>{parseFloat(record.totalTime).toFixed(2)}</TableCell>
-                <TableCell>{parseFloat(record.amount).toFixed(2)}</TableCell>
+                <TableCell>{parseFloat(record.amount).toFixed(2)}{currencySymbol}</TableCell>
                 <TableCell>
                   <IconButton 
                     sx={{ 

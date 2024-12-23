@@ -7,6 +7,18 @@ import Reports from './components/Reports';
 import Settings from './components/Settings';
 import Navigation from './components/Navigation';
 
+// Liste des devises disponibles
+export const currencies = [
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'USD', symbol: '$', name: 'Dollar américain' },
+  { code: 'GBP', symbol: '£', name: 'Livre sterling' },
+  { code: 'CHF', symbol: 'CHF', name: 'Franc suisse' },
+  { code: 'CAD', symbol: '$', name: 'Dollar canadien' },
+  { code: 'TND', symbol: 'DT', name: 'Dinar tunisien' },
+  { code: 'MAD', symbol: 'DH', name: 'Dirham marocain' },
+  { code: 'DZD', symbol: 'DA', name: 'Dinar algérien' },
+];
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -31,6 +43,7 @@ function App() {
     timeFormat: '24h',
     defaultRate: 25,
     projectManagement: false,
+    currency: localStorage.getItem('currency') || 'EUR',
   });
   const [records, setRecords] = useState([]);
 
@@ -57,6 +70,11 @@ function App() {
     return '';
   };
 
+  const getCurrentCurrencySymbol = () => {
+    const currentCurrency = currencies.find(c => c.code === settings.currency);
+    return currentCurrency ? currentCurrency.symbol : '€';
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -69,6 +87,7 @@ function App() {
               settings={settings} 
               onSave={handleAddRecord}
               records={records}
+              currencySymbol={getCurrentCurrencySymbol()}
             />
           )}
           {currentTab === 1 && (
@@ -77,18 +96,21 @@ function App() {
               records={records}
               onRecordsChange={setRecords}
               formatTimeForDisplay={formatTimeForDisplay}
+              currencySymbol={getCurrentCurrencySymbol()}
             />
           )}
           {currentTab === 2 && (
             <Reports 
               settings={settings}
               records={records}
+              currencySymbol={getCurrentCurrencySymbol()}
             />
           )}
           {currentTab === 3 && (
             <Settings 
               settings={settings} 
               onSettingsChange={setSettings}
+              currencies={currencies}
             />
           )}
         </Box>

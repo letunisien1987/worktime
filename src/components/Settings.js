@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Paper,
   FormControl,
@@ -10,9 +10,23 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Grid,
 } from '@mui/material';
 
+const currencies = [
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'USD', symbol: '$', name: 'Dollar américain' },
+  { code: 'GBP', symbol: '£', name: 'Livre sterling' },
+  { code: 'CHF', symbol: 'CHF', name: 'Franc suisse' },
+  { code: 'CAD', symbol: '$', name: 'Dollar canadien' },
+  { code: 'TND', symbol: 'DT', name: 'Dinar tunisien' },
+  { code: 'MAD', symbol: 'DH', name: 'Dirham marocain' },
+  { code: 'DZD', symbol: 'DA', name: 'Dinar algérien' },
+];
+
 function Settings({ settings, onSettingsChange }) {
+  const [currency, setCurrency] = useState(settings.currency || 'EUR');
+
   const handleChange = (field) => (event) => {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     onSettingsChange({
@@ -20,6 +34,16 @@ function Settings({ settings, onSettingsChange }) {
       [field]: value,
     });
   };
+
+  const handleCurrencyChange = (event) => {
+    setCurrency(event.target.value);
+    onSettingsChange({
+      ...settings,
+      currency: event.target.value,
+    });
+  };
+
+  const selectedCurrency = currencies.find(c => c.code === currency) || currencies[0];
 
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
@@ -51,6 +75,39 @@ function Settings({ settings, onSettingsChange }) {
             inputProps: { min: 0, step: 0.01 }
           }}
         />
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Tarif horaire par défaut"
+              type="number"
+              value={settings.defaultRate}
+              onChange={handleChange('defaultRate')}
+              InputProps={{
+                endAdornment: <Typography>{selectedCurrency.symbol}/h</Typography>,
+                inputProps: { min: 0, step: 0.5 }
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel>Devise</InputLabel>
+              <Select
+                value={currency}
+                onChange={handleCurrencyChange}
+                label="Devise"
+              >
+                {currencies.map((currency) => (
+                  <MenuItem key={currency.code} value={currency.code}>
+                    {currency.name} ({currency.symbol})
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
 
         <FormControlLabel
           control={

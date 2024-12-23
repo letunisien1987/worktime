@@ -32,7 +32,7 @@ const emptyTimeSlot = {
   endMinutes: '',
 };
 
-function Calculator({ settings, onSave, records }) {
+function Calculator({ settings, onSave, records, currencySymbol }) {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [timeSlots, setTimeSlots] = useState([{ ...emptyTimeSlot }]);
   const [rate, setRate] = useState(settings.defaultRate.toString());
@@ -265,7 +265,7 @@ function Calculator({ settings, onSave, records }) {
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="h4" color="success.main" align="right">
-                  {result.amount || '0.00'}€
+                  {result.amount || '0.00'}{currencySymbol}
                 </Typography>
               </Grid>
             </Grid>
@@ -410,7 +410,7 @@ function Calculator({ settings, onSave, records }) {
           <Grid item xs={6}>
             <TextField
               fullWidth
-              label="Prix par heure (€)"
+              label={`Prix par heure (${currencySymbol})`}
               type="number"
               value={rate}
               onChange={(e) => setRate(e.target.value)}
